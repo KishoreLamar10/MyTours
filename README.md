@@ -1,5 +1,5 @@
-Natours | Tour Booking Application
-Welcome to Natours, a full-stack web application for discovering and booking exciting nature tours. This project is built with a complete back-end API using Node.js and Express, and a server-side rendered front-end using Pug templates. It features secure user authentication, payment processing with Stripe, and interactive maps with Mapbox.
+MyTours | Tour Booking Application
+Welcome to MyTours, a full-stack web application for discovering and booking exciting nature tours. This project is built with a complete back-end API using Node.js and Express, and a server-side rendered front-end using Pug templates. It features secure user authentication, payment processing with Stripe, and interactive maps with Mapbox.
 
 ✨ Key Features
 RESTful API: A complete back-end API for managing tours, users, bookings, and reviews.
