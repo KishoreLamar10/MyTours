@@ -1,21 +1,22 @@
 /* eslint-disable */
 import { showAlert } from './alerts.js';
-const stripe = Stripe(
-  'pk_test_51RlltFP6Ffw347BpnIwdkuandpbVmyLqmnbA9gGffelADKAfh86sjzUokfrC5yybWdsQ4YI1QNQURtwa2t4wdZyA00yDJMQtqQ',
-);
 
 export const bookTour = async (tourId) => {
   try {
-    // 1) Get checkout session from API
-    const session = await axios(`/api/v1/bookings/checkout-session/${tourId}`);
-    console.log('SESSION RESPONSE FROM SERVER:', session);
+    const bookBtn = document.getElementById('book-tour');
+    // 1) Get the publishable key from the button's data attribute
+    const publishableKey = bookBtn.dataset.key;
+    const stripe = Stripe(publishableKey);
 
-    // 2) Create checkout form + chanre credit card
+    // 2) Get checkout session from the API
+    const session = await axios(`/api/v1/bookings/checkout-session/${tourId}`);
+
+    // 3) Create checkout form + redirect to checkout
     await stripe.redirectToCheckout({
       sessionId: session.data.session.id,
     });
   } catch (err) {
     console.log(err);
-    showAlert('error', err);
+    showAlert('error', err.response.data.message);
   }
 };
