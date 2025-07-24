@@ -82,3 +82,5 @@ config.env
 
 # VS Code files
 .vscode
+
+package-lock.json
