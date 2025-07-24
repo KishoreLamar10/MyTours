@@ -4,9 +4,7 @@
     {
       "src": "package.json",
       "use": "@vercel/static-build",
-      "config": {
-        "distDir": "public"
-      }
+      "config": { "distDir": "public" }
     },
     {
       "src": "server.js",
@@ -14,9 +12,7 @@
     }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "server.js"
-    }
+    { "src": "/dist/(.*)", "dest": "/public/dist/$1" },
+    { "src": "/(.*)", "dest": "server.js" }
   ]
 }
