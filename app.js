@@ -16,26 +16,21 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
-const bookingController = require('./controllers/bookingController'); // Important: require booking controller
+const bookingController = require('./controllers/bookingController');
 const viewRouter = require('./routes/viewRoutes');
 
-// Start express app
 const app = express();
 
-app.enable('trust proxy');
+// Set trust proxy for Render
+app.set('trust proxy', 1);
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // 1) GLOBAL MIDDLEWARES
-// Implement CORS
 app.use(cors());
 app.options('*', cors());
-
-// Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Set security HTTP headers
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -68,12 +63,10 @@ app.use(
   }),
 );
 
-// Development logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// Limit requests from same API
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
@@ -81,26 +74,17 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// THIS IS THE FIX: Stripe webhook route must be defined BEFORE express.json()
-// It needs the body in raw form, not JSON
 app.post(
   '/api/v1/bookings/webhookCheckout',
   express.raw({ type: 'application/json' }),
   bookingController.webhookCheckout,
 );
 
-// Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
-
-// Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
-
-// Data sanitization against XSS
 app.use(xss());
-
-// Prevent parameter pollution
 app.use(
   hpp({
     whitelist: [
@@ -113,14 +97,7 @@ app.use(
     ],
   }),
 );
-
 app.use(compression());
-
-// Test middleware
-app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString();
-  next();
-});
 
 // 3) ROUTES
 app.use('/', viewRouter);
