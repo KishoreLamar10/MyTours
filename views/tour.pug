@@ -1,4 +1,5 @@
 extends base
+include _reviewCard
 
 block content
   section.section-header
@@ -86,4 +87,3 @@ block content
           button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`, data-key=`${stripePublishableKey}`) Book tour now!
         else
           a.btn.btn--green.span-all-rows(href='/login') Log in to book tour
-
